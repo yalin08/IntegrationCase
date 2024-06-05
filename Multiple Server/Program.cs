@@ -22,6 +22,26 @@ public abstract class Program
         ThreadPool.QueueUserWorkItem(_ => service.SaveItem("b"));
         ThreadPool.QueueUserWorkItem(_ => service.SaveItem("c"));
 
+
+        Thread.Sleep(500);
+
+        ThreadPool.QueueUserWorkItem(_ => service.SaveItem("a"));
+        ThreadPool.QueueUserWorkItem(_ => service.SaveItem("b"));
+        ThreadPool.QueueUserWorkItem(_ => service.SaveItem("c"));
+
+        Thread.Sleep(500);
+
+ 
+        ThreadPool.QueueUserWorkItem(_ => service.SaveItem("c"));
+        ThreadPool.QueueUserWorkItem(_ => service.SaveItem("d"));
+        ThreadPool.QueueUserWorkItem(_ => service.SaveItem("e"));
+        Thread.Sleep(500);
+
+
+        ThreadPool.QueueUserWorkItem(_ => service.SaveItem("d"));
+        ThreadPool.QueueUserWorkItem(_ => service.SaveItem("f"));
+        ThreadPool.QueueUserWorkItem(_ => service.SaveItem("a"));
+
         Thread.Sleep(5000);
 
 
@@ -29,10 +49,6 @@ public abstract class Program
 
         service.GetAllItems().ForEach(Console.WriteLine);
 
-
-        Console.WriteLine("Everything in database:");
-
-        service.GetDatabase().ForEach(Console.WriteLine);
 
 
 

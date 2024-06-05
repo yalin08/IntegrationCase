@@ -33,8 +33,9 @@ namespace Integration.Service
         {
             var lockKey = $"lock:item:{itemContent}";
             var lockExpiry = TimeSpan.FromSeconds(30);
+  
 
-         
+          
 
             using (var redLock = redLockFactory.CreateLock(lockKey, lockExpiry))
             {
@@ -44,16 +45,22 @@ namespace Integration.Service
                     // Check if an item with the same content already exists
                     var existingItemKey = keys.FirstOrDefault(key => database.StringGet(key) == itemContent);
 
+
+                   
+
                     if (!string.IsNullOrEmpty(existingItemKey))
                     {
                         // Item with the same content already exists, return an error
-                    
+                        if(ItemIntegrationBackend.FindItemsWithContent(itemContent).Count==0)
+                        ItemIntegrationBackend.SaveItem(itemContent);
+
+                        Console.WriteLine($"Item with content {itemContent} already exists with id {int.Parse(existingItemKey)}");
                         return new Result(false, $"Item with content {itemContent} already exists with id {int.Parse(existingItemKey)}");
                     }
 
                     // Save item to backend
-                    var item = ItemIntegrationBackend.SaveItem(itemContent);
 
+                    var item = ItemIntegrationBackend.SaveItem(itemContent);
                     // Save item data to Redis cache
                     database.StringSet(item.Id.ToString(), item.Content);
 
